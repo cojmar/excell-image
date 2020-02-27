@@ -10,7 +10,7 @@ class app{
             let canvas = document.createElement('canvas');
             let ctx = canvas.getContext("2d");
             let img = new Image();        
-            img.src = "data:image/svg+xml;base64," + btoa(svg_xml);    
+            img.src = "data:image/svg+xml;base64," + btoa(svg_xml);
             img.onload = function() {            
                 ctx.drawImage(img, 0, 0);
                 resolve(canvas.toDataURL("image/png"));
@@ -28,7 +28,7 @@ class app{
                 let svg_text = svg.outerHTML;           
                 this.make_png_form_svg(svg_text).then(
                     (png)=>{
-                        temp.innerHTML = temp.innerHTML.split(svg_text).join(png);
+                        temp.innerHTML = temp.innerHTML.split(svg_text).join(`<img src="${png}">`);
                         done++
                         if (len-done <=0 ) resolve(temp.innerHTML);                    
                     }
