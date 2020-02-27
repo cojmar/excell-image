@@ -4,6 +4,7 @@ class app{
         this.init_table_data().init_dom().render();
     }
     init_table_data(){
+        return this
         this.table_data = [
             ["This",   "is",     "a",    "Test"],
             ["வணக்கம்", "สวัสดี", "你好", "가지마"],            
@@ -26,18 +27,23 @@ class app{
         ].reduce((acc,el)=>{acc[el] = document.getElementById(el);return acc},{});
         
         this.dom.export_button.onclick=()=>{
-            this.export('xlsx');            
+            this.export('exTable');            
         }
         return this;
     }
-    export(type, fn, dl){
-        var elt = document.getElementById('data-table');
-	    var wb = XLSX.utils.table_to_book(elt, {sheet:"Sheet JS"});
-	    return dl ?
-		XLSX.write(wb, {bookType:type, bookSST:true, type: 'base64'}) :
-		XLSX.writeFile(wb, fn || ('SheetJSTableExport.' + (type || 'xlsx')));
+    export(tableId){
+        let tableData = document.getElementById(tableId).outerHTML;
+        tableData = tableData.replace(/<img[^>]*>/gi,""); //enable thsi if u dont want images in your table
+        tableData = tableData.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
+        tableData = tableData.replace(/<input[^>]*>|<\/input>/gi, ""); //remove input params    
+        let a = document.createElement('a')
+        let dataType = 'data:application/vnd.ms-excel';
+        a.href = `data:application/vnd.ms-excel, ${encodeURIComponent(tableData)}`
+        a.download = `test.xls`
+        a.click()
     }
     render(){        
+        return this
         var ws = XLSX.utils.aoa_to_sheet(this.table_data);
         var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
         this.dom.output.innerHTML = html_string;
