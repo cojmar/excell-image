@@ -1,53 +1,49 @@
-// https://sheetjs.com/demo/table.html
 class app{
     constructor(){
-        this.init_table_data().init_dom().render();
-    }
-    init_table_data(){
-        return this
-        this.table_data = [
-            ["This",   "is",     "a",    "Test"],
-            ["வணக்கம்", "สวัสดี", "你好", "가지마"],            
-            ["Click",  "to",     "edit", "cells"],
-            [`
-            <svg width="50" height="40" xmlns="http://www.w3.org/2000/svg"> 
-                <g>                
-                    <rect id="svg_1" height="37" width="33" y="108" x="95" stroke-width="1.5" stroke="#000" fill="#fff"/>
-                </g>
-            </svg>
-            
-            `]
-        ];
-        return this;
-    }
-    init_dom(){
-        this.dom = [
-            'output',
-            'export_button',
-        ].reduce((acc,el)=>{acc[el] = document.getElementById(el);return acc},{});
-        
-        this.dom.export_button.onclick=()=>{
-            this.export('exTable');            
+        document.getElementById('export_button').onclick=()=>{
+            this.export('export_table','test.xls');
         }
-        return this;
     }
-    export(tableId){
-        let tableData = document.getElementById(tableId).outerHTML;
-        //tableData = tableData.replace(/<img[^>]*>/gi,""); //enable thsi if u dont want images in your table
-        //tableData = tableData.replace(/<A[^>]*>|<\/A>/g, ""); //remove if u want links in your table
-        //tableData = tableData.replace(/<input[^>]*>|<\/input>/gi, ""); //remove input params    
-        let a = document.createElement('a')
-        let dataType = 'data:application/vnd.ms-excel';
-        a.href = `${dataType}, ${encodeURIComponent(tableData)}`
-        a.download = `test.xls`
-        a.click()
+    make_png_form_svg(svg_xml){
+        return new Promise((resolve,reject)=>{
+            let png;
+            let canvas = document.createElement('canvas');
+            let ctx = canvas.getContext("2d");
+            let img = new Image();        
+            img.src = "data:image/svg+xml;base64," + btoa(svg_xml);    
+            img.onload = function() {            
+                ctx.drawImage(img, 0, 0);
+                resolve(canvas.toDataURL("image/png"));
+            }           
+        });
     }
-    render(){        
-        return this
-        var ws = XLSX.utils.aoa_to_sheet(this.table_data);
-        var html_string = XLSX.utils.sheet_to_html(ws, { id: "data-table", editable: true });
-        this.dom.output.innerHTML = html_string;
-        return this;
+    get_table_data(tableId){
+        return new Promise((resolve,reject)=>{
+            let temp = document.createElement("div");
+            temp.innerHTML = document.getElementById(tableId).outerHTML;
+            let svgs = temp.getElementsByTagName("svg");
+            let done = 0;
+            let len = svgs.length;
+            for(let svg of svgs){
+                let svg_text = svg.outerHTML;           
+                this.make_png_form_svg(svg_text).then(
+                    (png)=>{
+                        temp.innerHTML = temp.innerHTML.split(svg_text).join(png);
+                        done++
+                        if (len-done <=0 ) resolve(temp.innerHTML);                    
+                    }
+                );            
+            }
+        });        
+    }
+    export(tableId,file_name){
+        this.get_table_data(tableId).then((tableData)=>{
+            let a = document.createElement('a');
+            let dataType = 'data:application/vnd.ms-excel';
+            a.href = `${dataType}, ${encodeURIComponent(tableData)}`
+            a.download = file_name;
+            a.click()
+        });
     }
 }
 new app();
