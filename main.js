@@ -11,7 +11,7 @@ class app{
             let ctx = canvas.getContext("2d");
             let img = new Image();        
             img.src = "data:image/svg+xml;base64," + btoa(svg_xml);
-            img.onload = function() {            
+            img.onload = function(){            
                 ctx.drawImage(img, 0, 0);
                 resolve(canvas.toDataURL("image/png"));
             }           
@@ -28,7 +28,7 @@ class app{
                 let svg_text = svg.outerHTML;           
                 this.make_png_form_svg(svg_text).then(
                     (png)=>{
-                        temp.innerHTML = temp.innerHTML.split(svg_text).join(`<img src="${png}">`);
+                        temp.innerHTML = temp.innerHTML.split(svg_text).join(`<img src="${png}"/ alt="">`);
                         done++
                         if (len-done <=0 ) resolve(temp.innerHTML);                    
                     }
@@ -38,6 +38,7 @@ class app{
     }
     export(tableId,file_name){
         this.get_table_data(tableId).then((tableData)=>{
+            console.log(tableData);
             let a = document.createElement('a');
             let dataType = 'data:application/vnd.ms-excel';
             a.href = `${dataType}, ${encodeURIComponent(tableData)}`
