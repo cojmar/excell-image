@@ -54,8 +54,9 @@
         <hr>
         <div>
             <button id="export_button">Export</button>
-            <button id="js_array_button">Convert Array</button>            
-            <button id="convert_button">Convert</button>
+            <button id="svg_button">Convert Svg</button>
+            <button id="js_array_button">Convert Array</button><br>     
+            <button id="convert_button">Convert left textarea string</button>
         </div>
     </div>
     <div class="left">
@@ -66,7 +67,8 @@
     <div class="left">
         <textarea id="output_area">
             CONVERTED IMAGES TABLE
-        </textarea>
+        </textarea><br>
+        
     </div>
     <br clear="all">
     <hr>
@@ -84,6 +86,9 @@
                 }
                 document.getElementById('convert_button').onclick = () => {
                     this.convert_areas();
+                }
+                document.getElementById('svg_button').onclick = () => {
+                    this.svg_example();
                 }
                 document.getElementById('js_array_button').onclick = () => {
                     this.json_example();
@@ -152,6 +157,15 @@
                     ]
                     `.split('                    ').join('');
                     this.convert_areas();
+            }
+            svg_example(){
+                this.input_area.value = `
+                <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <rect id="svg_1" height="30" width="30" y="5" x="5" stroke-width="1.5" stroke="#df0000" fill="#000000" />
+                    </g>
+                </svg>\``.split('                ').join('');
+                this.convert_areas();
             }
             export(tableId, file_name) {
                 let table = document.getElementById(tableId).outerHTML;
