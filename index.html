@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <h4><b>(1)</b> HTML export - svg 2 png convertor to base64 PNG ! WORKING !- excel doesn't recognize html table with base64 images :((</h4>
+    <h4><b>(1)</b> HTML export - svg 2 png convertor to base64 PNG ! WORKING !- excel nu stie sa randeze continut tabela html cu imagini embeduite base64 stie doar daca sunt puse pe un URL :((</h4>
     <hr>
     <div class="left">
         <table id="export_table" border="1px">
@@ -72,13 +72,18 @@
     <br clear="all">
     <hr>
     <h4>
-      <b>(2)</b>  Real XCEL with base64 images working example
+      <b>(2)</b>  Real XCEL with base64 images working example using - <a href="https://github.com/exceljs/exceljs" target="_blank">https://github.com/exceljs/exceljs</a> (aici trebuie citita documentatia pt ca bibleoteca asta face de toate e un mini excel)
     </h4>
     <hr>
     <iframe src="working_real_excell_export.html" style="width:100%;border:0px;height:500px;"></iframe>
     <hr>
-    <h1>TO DO:</h1>
-    <h2> MIX THIS 2 EXAMPLES FOR FINAL PRODUCT</h2>
+    <h2>TO DO:</h2>
+    <h4>
+    <h4>-Citit documentatia si cautat cum se pote face tabela care avem noi nevoie (cu un camp de o coloana) <a href="https://github.com/exceljs/exceljs" target="_blank">https://github.com/exceljs/exceljs</a><br>
+    -Facuta tabla ca in 'working_real_excell_export.html' si aplicata si conversia de date din exemplu 1<br>
+    Sau<br>
+    -In exemplul 1 postata poza catre un server php ca png care o salveza si o face vizibila pe un link, iar linkul respectiv pus la src in loc de base64 embed si o sa mearga cu tabela html<br>    
+    <h4>
     <script>
         class app {
             constructor() {
