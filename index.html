@@ -78,6 +78,7 @@
         class app {
             constructor() {
                 this.table = 'export_table';
+                this.input_area = document.getElementById('input_area');
                 document.getElementById('export_button').onclick = () => {
                     this.export(this.table, 'test.xls');
                 }
@@ -85,24 +86,7 @@
                     this.convert_areas();
                 }
                 document.getElementById('js_array_button').onclick = () => {
-                    document.getElementById('input_area').value = `
-                    [
-                        {
-                            name:"test",
-                            image:\`<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-                                        <g>
-                                            <rect id="svg_1" height="30" width="30" y="5" x="5" stroke-width="1.5" stroke="#df0000" fill="#000000" />
-                                        </g>
-                                    </svg>\`,
-                            "age":"0"
-
-                        },
-                        [
-                            'a','b','<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg"><g><rect id="svg_1" height="30" width="30" y="5" x="5" stroke-width="1.5" stroke="#df0000" fill="#000000" /></g></svg>',
-                        ]
-                    ]
-                    `.split('                    ').join('');
-                    this.convert_areas();
+                    this.json_example();
                 }
                 this.convert_example();
             }
@@ -139,15 +123,35 @@
                 });
             }
             convert_areas(){
-                this.convert_svg_to_png(document.getElementById('input_area').value).then(converted => {
+                this.convert_svg_to_png(this.input_area.value).then(converted => {
                     document.getElementById('output_area').value = `CONVERTED\n${converted}`;
                 })
                 return this;
             }
             convert_example() {
-                document.getElementById('input_area').value = `${document.getElementById(this.table).outerHTML}`;
+                this.input_area.value = `${document.getElementById(this.table).outerHTML}`;
                 this.convert_areas();
                 return this;
+            }
+            json_example(){
+                this.input_area.value = `
+                    [
+                        {
+                            name:"test",
+                            image:\`<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+                                        <g>
+                                            <rect id="svg_1" height="30" width="30" y="5" x="5" stroke-width="1.5" stroke="#df0000" fill="#000000" />
+                                        </g>
+                                    </svg>\`,
+                            "age":"0"
+
+                        },
+                        [
+                            'a','b','<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg"><g><rect id="svg_1" height="30" width="30" y="5" x="5" stroke-width="1.5" stroke="#df0000" fill="#000000" /></g></svg>',
+                        ]
+                    ]
+                    `.split('                    ').join('');
+                    this.convert_areas();
             }
             export(tableId, file_name) {
                 let table = document.getElementById(tableId).outerHTML;
